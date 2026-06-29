@@ -114,21 +114,19 @@ def run_cross_validation(
         # ── Training arguments ────────────────────────────────────────────
         training_args = TrainingArguments(
             output_dir=str(fold_output_dir),
-            adam_epsilon=1e-8,
-            learning_rate=training_cfg["learning_rate"],
-            fp16=training_cfg.get("fp16", False),
-            per_device_train_batch_size=training_cfg["per_device_train_batch_size"],
-            per_device_eval_batch_size=training_cfg["per_device_eval_batch_size"],
-            gradient_accumulation_steps=training_cfg["gradient_accumulation_steps"],
-            num_train_epochs=training_cfg["num_train_epochs"],
-            warmup_ratio=training_cfg.get("warmup_ratio", 0),
+            learning_rate=float(training_cfg["learning_rate"]),
+            fp16=bool(training_cfg.get("fp16", False)),
+            per_device_train_batch_size=int(training_cfg["per_device_train_batch_size"]),
+            per_device_eval_batch_size=int(training_cfg["per_device_eval_batch_size"]),
+            gradient_accumulation_steps=int(training_cfg["gradient_accumulation_steps"]),
+            num_train_epochs=int(training_cfg["num_train_epochs"]),
             do_eval=True,
             eval_strategy="epoch",
             save_strategy="epoch",
             load_best_model_at_end=True,
             metric_for_best_model="micro_f1",
             greater_is_better=True,
-            seed=training_cfg["seed"],
+            seed=int(training_cfg["seed"]),
         )
 
         set_seed(training_args.seed)
