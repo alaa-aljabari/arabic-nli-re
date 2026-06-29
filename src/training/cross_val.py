@@ -123,7 +123,7 @@ def run_cross_validation(
             num_train_epochs=training_cfg["num_train_epochs"],
             warmup_ratio=training_cfg.get("warmup_ratio", 0),
             do_eval=True,
-            evaluation_strategy="epoch",
+            eval_strategy="epoch",
             save_strategy="epoch",
             load_best_model_at_end=True,
             metric_for_best_model="micro_f1",
