@@ -3,8 +3,8 @@ dataset.py
 ----------
 Sentence Encoder input preparation for the NLI-RE framework.
 
-In Section 3 (§Sentence Encoder), the input to the transformer T is a
-concatenated sequence of the premise s and the hypothesis h:
+The input to the transformer T is a concatenated sequence of 
+the premise s and the hypothesis h:
 
     H = T([CLS] s [SEP] h)
 
@@ -25,12 +25,12 @@ from transformers.data.processors.utils import InputFeatures
 
 class ClassificationDataset(Dataset):
     """
-    Prepares premise-hypothesis pairs for the NLI-RE Sentence Encoder (Eq. 1).
+    Prepares premise-hypothesis pairs for the NLI-RE Sentence Encoder.
 
     Each nli_sentence is the full concatenated pair:
         [CLS] premise [SEP] hypothesis
     The transformer T processes this sequence to produce the feature vector H
-    that feeds the Relation Inference layer (Eq. 2).
+    that feeds the Relation Inference layer.
 
     Args:
         texts:       Pre-built premise-hypothesis sentence strings (nli_sentence).
