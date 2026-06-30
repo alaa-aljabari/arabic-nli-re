@@ -203,7 +203,62 @@ python scripts/train.py --config configs/config.yaml
 # Step 2 — predict
 python scripts/predict.py --config configs/config.yaml
 ```
+---
 
+## Citation
+
+If you use this code or the dataset in your research, please cite the following papers:
+
+```bibtex
+@inproceedings{aljabari-etal-2025-wojoodrelations,
+    title = "$\mathrm{Wojood^{Relations}}$: {A}rabic Relation Extraction Corpus and Modeling",
+    author = "Aljabari, Alaa  and
+      Khalilia, Mohammed  and
+      Jarrar, Mustafa",
+    booktitle = "Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2025",
+    address = "Suzhou, China",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.emnlp-main.1741/",
+    doi = "10.18653/v1/2025.emnlp-main.1741",
+    pages = "34342--34360",
+    ISBN = "979-8-89176-332-6",
+}
+
+@inproceedings{aljabari-etal-2025-wojoodontology,
+    title = "{W}ojood{O}ntology: Ontology-Driven {LLM} Prompting for Unified Information Extraction Tasks",
+    author = "Aljabari, Alaa  and
+      Hamad, Nagham  and
+      Khalilia, Mohammed  and
+      Jarrar, Mustafa",
+    booktitle = "Proceedings of The Third Arabic Natural Language Processing Conference",
+    month = nov,
+    year = "2025",
+    address = "Suzhou, China",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.arabicnlp-main.14/",
+    doi = "10.18653/v1/2025.arabicnlp-main.14",
+    pages = "179--193",
+    ISBN = "979-8-89176-352-4",
+}
+
+@inproceedings{aljabari-etal-2024-event,
+    title = "Event-Arguments Extraction Corpus and Modeling using {BERT} for {A}rabic",
+    author = "Aljabari, Alaa  and
+      Duaibes, Lina  and
+      Jarrar, Mustafa  and
+      Khalilia, Mohammed",
+    booktitle = "Proceedings of the Second Arabic Natural Language Processing Conference",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.arabicnlp-1.26/",
+    doi = "10.18653/v1/2024.arabicnlp-1.26",
+    pages = "309--319",
+}
+```
 ---
 
 ## License
