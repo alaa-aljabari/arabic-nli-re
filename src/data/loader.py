@@ -3,7 +3,7 @@ loader.py
 ---------
 Loads and prepares the NLI-RE premise-hypothesis sentence pairs for training.
 
-In the NLI-RE framework (Section 3), each input sentence s containing two
+In the NLI-RE framework, each input sentence s containing two
 named entity mentions n_i and n_j is treated as the premise. The corresponding
 hypothesis is a verbalized candidate relation constructed from a template T_r.
 This module loads the pre-built (premise, hypothesis, label) triples from
