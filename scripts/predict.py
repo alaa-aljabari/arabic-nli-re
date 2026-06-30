@@ -60,13 +60,13 @@ def main() -> None:
     model_cfg  = cfg["model"]
     output_cfg = cfg["output"]
 
-    # ── 1. Load the test split (or a custom --input file) ────────────────────
+    # 1. Load the test split (or a custom --input file)
     input_path = args.input or data_cfg["test_path"]
     test_df    = _load_jsonl(input_path)
     texts      = test_df[data_cfg["data_column"]].tolist()
     print(f"[predict] Input: {input_path}  ({len(texts)} rows)")
 
-    # ── 2. Collect fold model directories ─────────────────────────────────────
+    # 2. Collect fold model directories
     base_dir        = Path(output_cfg["base_dir"])
     fold_model_dirs = sorted(base_dir.glob("cls_train_*/best_model"))
     if not fold_model_dirs:
@@ -75,7 +75,7 @@ def main() -> None:
         )
     print(f"[predict] Found {len(fold_model_dirs)} fold model(s).")
 
-    # ── 3. Ensemble inference ─────────────────────────────────────────────────
+    # 3. Ensemble inference
     cross_val_df = run_ensemble_inference(
         texts=texts,
         fold_model_dirs=fold_model_dirs,
