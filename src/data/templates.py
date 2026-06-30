@@ -10,7 +10,7 @@ entity e1 and object entity e2 as an Arabic hypothesis string h.
 Each template is a callable: (subject, object) -> hypothesis string.
 """
 
-from typing import Callable, Dict
+from typing import Callable, Dict, FrozenSet, Tuple
 
 # Type alias
 RelationTemplate = Callable[[str, str], str]
@@ -115,6 +115,60 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     "GPE.capital_of":                  lambda e1, e2: f"{e1} هي عاصمة {e2}",
     # {e1} عدد سكانها {e2}             → has a population of
     "GPE.has_population":              lambda e1, e2: f"{e1} عدد سكانها {e2}",
+}
+
+# Relation schema
+RELATION_SCHEMA: Dict[str, Tuple[FrozenSet[str], FrozenSet[str]]] = {
+    # Family
+    "Family.has_parent":               (frozenset({"PERS"}),               frozenset({"PERS"})),
+    "Family.has_spouse":               (frozenset({"PERS"}),               frozenset({"PERS"})),
+    "Family.has_sibling":              (frozenset({"PERS"}),               frozenset({"PERS"})),
+    "Family.has_relative":             (frozenset({"PERS"}),               frozenset({"PERS"})),
+    # Personal
+    "Personal.birth_date":             (frozenset({"PERS"}),               frozenset({"DATE"})),
+    "Personal.death_date":             (frozenset({"PERS"}),               frozenset({"DATE"})),
+    "Personal.birth_place":            (frozenset({"PERS"}),               frozenset({"GPE", "LOC"})),
+    "Personal.has_occupation":         (frozenset({"PERS"}),               frozenset({"OCC"})),
+    # Business
+    "Business.has_conflict_with":      (frozenset({"ORG", "NORP", "GPE"}), frozenset({"ORG", "NORP", "GPE"})),
+    "Business.has_competitor":         (frozenset({"PERS", "ORG"}),        frozenset({"PERS", "ORG"})),
+    "Business.has_partner_with":       (frozenset({"ORG"}),                frozenset({"ORG"})),
+    # Administration
+    "Administration.manager_of":       (frozenset({"PERS"}),               frozenset({"ORG", "FAC"})),
+    "Administration.president_of":     (frozenset({"PERS"}),               frozenset({"ORG", "GPE"})),
+    "Administration.leader_of":        (frozenset({"PERS"}),               frozenset({"ORG"})),
+    # PartOf
+    "PartOf.geopolitical_division":    (frozenset({"GPE", "LOC"}),         frozenset({"GPE", "LOC"})),
+    "PartOf.subsidiary":               (frozenset({"ORG"}),                frozenset({"ORG"})),
+    # Affiliation
+    "Affiliation.member_of":           (frozenset({"PERS", "GPE"}),        frozenset({"ORG", "NORP"})),
+    "Affiliation.employee_of":         (frozenset({"PERS"}),               frozenset({"ORG", "FAC"})),
+    "Affiliation.student_at":          (frozenset({"PERS"}),               frozenset({"ORG"})),
+    "Affiliation.owner_of":            (frozenset({"PERS"}),               frozenset({"ORG", "FAC"})),
+    # Productivity
+    "Productivity.inventor_of":        (frozenset({"PERS"}),               frozenset({"PRODUCT"})),
+    "Productivity.manufacturer_of":    (frozenset({"ORG"}),                frozenset({"PRODUCT"})),
+    "Productivity.builder_of":         (frozenset({"PERS", "NORP", "ORG"}),frozenset({"FAC", "ORG"})),
+    "Productivity.founder_of":         (frozenset({"PERS"}),               frozenset({"ORG"})),
+    # Location
+    "Location.lives_in":               (frozenset({"PERS", "NORP"}),       frozenset({"GPE", "LOC"})),
+    "Location.located_in":             (frozenset({"FAC", "ORG"}),         frozenset({"GPE", "LOC"})),
+    "Location.headquartered_in":       (frozenset({"ORG"}),                frozenset({"LOC", "GPE"})),
+    "Location.has_border_with":        (frozenset({"LOC", "GPE"}),         frozenset({"LOC", "GPE"})),
+    "Location.nearby":                 (frozenset({"GPE", "LOC", "FAC"}),  frozenset({"GPE", "LOC", "FAC"})),
+    # Organization
+    "Organization.has_propoerty":      (frozenset({"ORG"}),                frozenset({"PRODUCT"})),
+    "Organization.branch_count":       (frozenset({"ORG"}),                frozenset({"CARDINALITY"})),
+    "Organization.has_revenue":        (frozenset({"ORG"}),                frozenset({"MONEY"})),
+    "Organization.employs":            (frozenset({"ORG"}),                frozenset({"CARDINALITY"})),
+    "Organization.found_on":           (frozenset({"ORG"}),                frozenset({"DATE", "TIME"})),
+    "Organization.has_alternate_name": (frozenset({"ORG", "FAC"}),         frozenset({"ORG", "FAC"})),
+    # GPE
+    "GPE.has_area":                    (frozenset({"GPE", "LOC"}),         frozenset({"QUANTITY"})),
+    "GPE.official_language":           (frozenset({"GPE", "LOC"}),         frozenset({"LANGUAGE"})),
+    "GPE.has_currency":                (frozenset({"GPE", "LOC"}),         frozenset({"CURRENCY"})),
+    "GPE.has_population":              (frozenset({"GPE"}),                frozenset({"CARDINALITY"})),
+    "GPE.capital_of":                  (frozenset({"GPE"}),                frozenset({"GPE"})),
 }
 
 # All relation types that carry a positive entailment signal
