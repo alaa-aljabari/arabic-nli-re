@@ -7,7 +7,6 @@ Section 3 (§Template Construction) defines a template T_r(e1, e2) for each
 relation type r : D → Z that verbalizes a candidate relation between subject
 entity e1 and object entity e2 as an Arabic hypothesis string h.
 
-The full set of 40 templates is taken directly from Table 1 of the paper.
 Each template is a callable: (subject, object) -> hypothesis string.
 """
 
@@ -17,7 +16,7 @@ from typing import Callable, Dict
 RelationTemplate = Callable[[str, str], str]
 
 RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
-    # ── Family ────────────────────────────────────────────────────────────────
+    # =============== Family =========================================================
     # {e1} هو والد أو والدة {e2}       → is the parent of
     "Family.has_parent":               lambda e1, e2: f"{e1} هو والد أو والدة {e2}",
     # {e1} هو أخ أو أخت {e2}           → is the sibling of
@@ -27,7 +26,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} هو قريب {e2}                → is a relative of
     "Family.has_relative":             lambda e1, e2: f"{e1} هو قريب {e2}",
 
-    # ── Personal ──────────────────────────────────────────────────────────────
+    # =============== Personal =========================================================
     # {e1} وُلِد في تاريخ {e2}          → was born on
     "Personal.birth_date":             lambda e1, e2: f"{e1} وُلِد في تاريخ {e2}",
     # {e1} توفي في تاريخ {e2}           → died on
@@ -37,7 +36,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} يعمل كـ / مهنته {e2}        → works as
     "Personal.has_occupation":         lambda e1, e2: f"{e1} يعمل كـ / مهنته {e2}",
 
-    # ── Business ──────────────────────────────────────────────────────────────
+    # =============== Business =========================================================
     # {e1} لديه نزاع مع {e2}           → has a conflict with
     "Business.has_conflict_with":      lambda e1, e2: f"{e1} لديه نزاع مع {e2}",
     # {e1} منافس لـ {e2}               → is a competitor of
@@ -45,7 +44,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} شريك لـ {e2}                → is a partner of
     "Business.has_partner_with":       lambda e1, e2: f"{e1} شريك لـ {e2}",
 
-    # ── Administration ────────────────────────────────────────────────────────
+    # =============== Administration =========================================================
     # {e1} هو مدير {e2}                → is the manager of
     "Administration.manager_of":       lambda e1, e2: f"{e1} هو مدير {e2}",
     # {e1} هو رئيس/يتولى أعلى منصب في {e2} → is the president of
@@ -53,13 +52,13 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} هو قائد {e2}                → is the leader of
     "Administration.leader_of":        lambda e1, e2: f"{e1} هو قائد {e2}",
 
-    # ── PartOf ────────────────────────────────────────────────────────────────
+    # =============== PartOf =========================================================
     # {e1} هو تقسيم جغرافي لـ {e2}     → is a geopolitical division of
     "PartOf.geopolitical_division":    lambda e1, e2: f"{e1} هو تقسيم جغرافي لـ {e2}",
     # {e1} فرع تابع لـ {e2}            → is a subsidiary of
     "PartOf.subsidiary":               lambda e1, e2: f"{e1} فرع تابع لـ {e2}",
 
-    # ── Affiliation ───────────────────────────────────────────────────────────
+    # =============== Affiliation =========================================================
     # {e1} عضو في {e2}                 → is a member of
     "Affiliation.member_of":           lambda e1, e2: f"{e1} عضو في {e2}",
     # {e1} يعمل لدى {e2}               → is employed by
@@ -69,7 +68,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} يمتلك {e2}                  → owns
     "Affiliation.owner_of":            lambda e1, e2: f"{e1} يمتلك {e2}",
 
-    # ── Productivity ──────────────────────────────────────────────────────────
+    # =============== Productivity =========================================================
     # {e1} مخترع {e2}                  → is the inventor of
     "Productivity.inventor_of":        lambda e1, e2: f"{e1} مخترع {e2}",
     # {e1} يصنّع {e2}                  → manufactures
@@ -79,7 +78,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} هو مؤسس {e2}               → is the founder of
     "Productivity.founder_of":         lambda e1, e2: f"{e1} هو مؤسس {e2}",
 
-    # ── Location ──────────────────────────────────────────────────────────────
+    # =============== Location =========================================================
     # {e1} يعيش في {e2}               → lives in
     "Location.lives_in":               lambda e1, e2: f"{e1} يعيش في {e2}",
     # {e1} يقع في {e2}                → is located in
@@ -91,7 +90,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} يقع بالقرب من {e2}         → is near
     "Location.nearby":                 lambda e1, e2: f"{e1} يقع بالقرب من {e2}",
 
-    # ── Organization ──────────────────────────────────────────────────────────
+    # =============== Organization =========================================================
     # {e1} لديه ممتلكات {e2}           → has property
     "Organization.has_propoerty":      lambda e1, e2: f"{e1} لديه ممتلكات {e2}",
     # {e1} يضم عدد فروع قدره {e2}      → has branches
@@ -105,7 +104,7 @@ RELATION_TEMPLATES: Dict[str, RelationTemplate] = {
     # {e1} يُعرف أيضاً باسم {e2}      → is also known as
     "Organization.has_alternate_name": lambda e1, e2: f"{e1} يُعرف أيضاً باسم {e2}",
 
-    # ── GPE (Geo-Political Entity) ────────────────────────────────────────────
+    # =============== GPE (Geo-Political Entity) =========================================================
     # {e1} تبلغ مساحتها {e2}           → has an area of
     "GPE.has_area":                    lambda e1, e2: f"{e1} تبلغ مساحتها {e2}",
     # {e1} لغتها الرسمية {e2}          → official language is
@@ -125,8 +124,7 @@ POSITIVE_RELATIONS = set(RELATION_TEMPLATES.keys())
 def verbalize(relation: str, subject: str, obj: str) -> str:
     """
     Verbalize a candidate relation between subject and object into an
-    Arabic hypothesis string h using the predefined template T_r(e1, e2)
-    from Table 1 of the paper.
+    Arabic hypothesis string h using the predefined template T_r(e1, e2).
 
     Args:
         relation: Relation type string (must be a key in RELATION_TEMPLATES).
