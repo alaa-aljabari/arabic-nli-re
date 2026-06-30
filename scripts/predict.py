@@ -83,7 +83,7 @@ def main() -> None:
         device=cuda_device,
     )
 
-    # ── 4. Report & save ──────────────────────────────────────────────────────
+    # 4. Report & save 
     label_column = data_cfg["label_column"]
     if label_column in test_df.columns:
         print_classification_report(test_df[label_column], cross_val_df["preds"])
