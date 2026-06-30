@@ -3,8 +3,8 @@ cross_val.py
 ------------
 Stratified K-Fold training loop for the NLI-RE relation classifier.
 
-The NLI-RE framework (Section 3) fine-tunes a transformer sentence encoder T
-(UBC-NLP/ARBERTv2) on premise-hypothesis pairs to predict binary entailment.
+The NLI-RE framework fine-tunes a transformer sentence encoder (UBC-NLP/ARBERTv2) 
+on premise-hypothesis pairs to predict binary entailment.
 To obtain robust generalisation estimates and reduce sensitivity to a single
 train/validation split, we use Stratified K-Fold cross-validation, preserving
 the True/False class ratio in every fold.
@@ -49,10 +49,10 @@ def run_cross_validation(
     Run Stratified K-Fold fine-tuning of the NLI-RE sentence encoder.
 
     For each fold, ARBERTv2 is fine-tuned on a stratified subset of the
-    premise-hypothesis training pairs. The Relation Inference layer (Eq. 2)
+    premise-hypothesis training pairs. The Relation Inference layer
     predicts binary entailment, and the model is optimised with the combined
-    Loss = L_WCE + L_NCE (Eqs. 3–4) to handle positive/negative instance
-    imbalance.  The best checkpoint per fold (highest Micro-F1 on the dev set)
+    Loss = L_WCE + L_NCE to handle positive/negative instance imbalance.  
+    The best checkpoint per fold (highest Micro-F1 on the dev set)
     is saved for ensemble inference.
 
     Args:
@@ -93,7 +93,7 @@ def run_cross_validation(
 
         fold_output_dir = output_base_dir / f"cls_train_{fold_num}"
 
-        # ── Sentence Encoder input (Eq. 1) ────────────────────────────────
+        # ======= Sentence Encoder input ==========================================
         # train_dataset: stratified fold subset of premise-hypothesis pairs
         # val_dataset:   fixed development set used across all folds
         train_dataset = ClassificationDataset(
@@ -111,7 +111,7 @@ def run_cross_validation(
             label_map=label_map,
         )
 
-        # ── Training arguments ────────────────────────────────────────────
+        # ======= Training arguments ==========================================
         training_args = TrainingArguments(
             output_dir=str(fold_output_dir),
             learning_rate=float(training_cfg["learning_rate"]),
@@ -131,14 +131,14 @@ def run_cross_validation(
 
         set_seed(training_args.seed)
 
-        # ── Sentence encoder T = ARBERTv2 with Relation Inference head ────
+        # ======= Sentence encoder T = ARBERTv2 with Relation Inference head ================
         model = AutoModelForSequenceClassification.from_pretrained(
             model_name,
             return_dict=True,
             num_labels=len(label_map),   # 2: True / False
         )
 
-        # ── ContrastiveTrainer: Loss = L_WCE + L_NCE (Eqs. 3–4) ─────────
+        # ======= ContrastiveTrainer: Loss = L_WCE + L_NCE ================
         trainer = ContrastiveTrainer(
             tau=loss_cfg.get("tau", 1.0),
             class_weights=loss_cfg.get("class_weights", [1.0, 1.0]),
@@ -158,7 +158,7 @@ def run_cross_validation(
         all_results.append(results)
         print(f"[fold {fold_num}] Results: {results}")
 
-        # ── Persist best checkpoint for ensemble inference ────────────────
+        # ======= Persist best checkpoint for ensemble inference ===============
         best_model_dir = fold_output_dir / "best_model"
         trainer.save_model(str(best_model_dir))
         val_dataset.tokenizer.save_pretrained(str(best_model_dir))
