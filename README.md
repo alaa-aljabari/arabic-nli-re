@@ -29,14 +29,14 @@ For each of the **40 relation types**, a relation-aware Arabic template `T_r(e1,
 | `Personal.has_occupation` | حبيب بولس | مدير مال عكا | حبيب بولس يعمل مدير مال عكا |
 | `Affiliation.member_of` | أطباء بلا حدود | الأمم المتحدة | أطباء بلا حدود عضو في الأمم المتحدة |
 
-### 2. Sentence Encoder (Eq. 1)
+### 2. Sentence Encoder
 A transformer encoder `T` (UBC-NLP/ARBERTv2) processes the concatenated premise-hypothesis pair:
 
 ```
 H = T([CLS] s [SEP] h)
 ```
 
-### 3. Relation Inference (Eq. 2)
+### 3. Relation Inference
 The feature vector `H` is passed through a fully connected layer:
 
 ```
@@ -131,22 +131,16 @@ The repository includes a balanced sample of **400 NLI pairs** in `data/nli/`:
 
 | File | Pairs | True | False |
 |---|---|---|---|
-| `train.jsonl` | 280 | ~140 | ~140 |
-| `val.jsonl`   |  60 | ~30  | ~30  |
-| `test.jsonl`  |  60 | ~30  | ~30  |
+| `train.jsonl` | 280 | 138 | 142 |
+| `val.jsonl`   |  60 |  38 |  22 |
+| `test.jsonl`  |  60 |  30 |  30 |
 
-Each record has the structure:
+Each record contains exactly two fields:
 
 ```json
 {
-  "sentence_id":  "100007145",
-  "sentence":     "رسالة من مدير مال عكا حبيب بولس إلى وكيل قاضي عكا ...",
-  "subject":      "حبيب بولس",
-  "object":       "مدير مال عكا",
-  "relation":     "Personal.has_occupation",
-  "hypothesis":   "حبيب بولس يعمل مدير مال عكا",
-  "nli_sentence": "[CLS] رسالة من مدير مال عكا ... [SEP] حبيب بولس يعمل مدير مال عكا",
-  "Label":        "True"
+  "nli_sentence": "[CLS] رسالة من مدير مال عكا حبيب بولس ... [SEP] حبيب بولس يعمل كـ / مهنته مدير مال عكا",
+  "Label": "True"
 }
 ```
 
@@ -161,7 +155,7 @@ python scripts/prepare_data.py --config configs/config.yaml
 python scripts/prepare_data.py --n_positive 500 --n_negative 500
 ```
 
-Raw records must have the fields: `sentence`, `subject`, `object`, `relation`.
+Raw records must contain the fields: `sentence`, `subject`, `object`, `relation`.
 
 ---
 
@@ -169,13 +163,13 @@ Raw records must have the fields: `sentence`, `subject`, `object`, `relation`.
 
 ```yaml
 model:
-  name: "UBC-NLP/ARBERTv2"   # Sentence encoder T
+  name: "UBC-NLP/ARBERTv2"   # Sentence encoder
   max_len: 128                 # Max tokens for [CLS] s [SEP] h
   num_folds: 2                 # K in Stratified K-Fold
 
 loss:
-  tau: 1.0                     # Temperature τ — L_NCE (Eq. 4)
-  class_weights: [0.2, 1.0]   # [w_n, w_p]  — L_WCE (Eq. 3)
+  tau: 1.0                     # Temperature τ for L_NCE
+  class_weights: [0.2, 1.0]   # [w_n, w_p] for L_WCE
 
 data:
   train_path: "data/nli/train.jsonl"
@@ -200,7 +194,7 @@ python scripts/predict.py --config configs/config.yaml
 ### Run on the full dataset
 
 ```bash
-# Step 0 — generate NLI pairs
+# Step 0 — generate NLI pairs from raw RE records
 python scripts/prepare_data.py --config configs/config.yaml
 
 # Step 1 — train
