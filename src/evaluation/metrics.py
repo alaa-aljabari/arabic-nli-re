@@ -3,7 +3,7 @@ metrics.py
 ----------
 Evaluation utilities for the NLI-RE relation classifier.
 
-After fine-tuning, the Relation Inference layer (Eq. 2) produces a predicted
+After fine-tuning, the Relation Inference layer produces a predicted
 entailment label ŷ_i ∈ {True, False} for each premise-hypothesis pair.
 A True prediction indicates that relation r specified in the hypothesis h
 exists between the entity pair (n_i, n_j) in the premise sentence s.
@@ -103,7 +103,7 @@ def run_ensemble_inference(
                 preds.append(result)
         cross_val_df[f"model_{fold_idx}"] = preds
 
-    # ── Average softmax scores across K fold models ───────────────────────
+    # ==== Average softmax scores across K fold models ===============
     num_folds = len(fold_model_dirs)
     final_labels: List[str] = []
     final_scores: List[float] = []
