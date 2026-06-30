@@ -4,8 +4,8 @@ setup(
     name="arabic-nli-classifier",
     version="1.0.0",
     description="Arabic NLI sentence classifier using ARBERTv2 with contrastive loss.",
-    author="Your Name",
-    author_email="you@example.com",
+    author="Alaa Aljabari",
+    author_email="aaljabari@birzeit.edu",
     packages=find_packages(where="."),
     python_requires=">=3.10",
     install_requires=[
