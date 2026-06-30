@@ -9,7 +9,7 @@ from src.data.dataset import ClassificationDataset
 
 MODEL_NAME = "bert-base-multilingual-cased"  # lightweight stand-in for CI
 LABEL_MAP = {"entailment": 0, "contradiction": 1}
-TEXTS = ["هذا اختبار.", "جملة عربية أخرى."]
+TEXTS = ["مدينة القدس هي العاصمة الأبدية والروحية والسياسية لدولة فلسطين", "القدس عاصمة فلسطين"]
 TARGETS = ["entailment", "contradiction"]
 
 
