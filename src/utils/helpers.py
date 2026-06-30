@@ -45,8 +45,8 @@ def build_label_maps(label_list: List[str]) -> tuple[Dict[str, int], Dict[int, s
     """
     Build forward and inverse label mappings for the binary entailment task.
 
-    The NLI-RE Relation Inference layer (Eq. 2) outputs a score ŷ_i whose
-    argmax index is mapped back to a human-readable label via these dicts.
+    The NLI-RE Relation Inference layer outputs a score ŷ_i whose argmax 
+    index is mapped back to a human-readable label via these dicts.
 
     Args:
         label_list: Ordered list of unique entailment labels,
