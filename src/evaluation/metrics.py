@@ -86,16 +86,21 @@ def run_ensemble_inference(
     for fold_idx, model_dir in enumerate(fold_model_dirs):
         print(f"\n[inference] Fold {fold_idx}: {model_dir}")
         pipe = pipeline(
-            "sentiment-analysis",
+            "text-classification",
             model=str(model_dir),
             device=device,
-            return_all_scores=True,
+            top_k=None,          # return scores for all classes
             max_length=max_len,
             truncation=True,
         )
         preds = []
         for batch in tqdm(more_itertools.chunked(texts, batch_size)):
-            preds.extend(pipe(batch))
+            results = pipe(batch)
+            # Normalise: each result is a list of {"label":..,"score":..} dicts
+            for result in results:
+                if isinstance(result, dict):
+                    result = [result]
+                preds.append(result)
         cross_val_df[f"model_{fold_idx}"] = preds
 
     # ── Average softmax scores across K fold models ───────────────────────
