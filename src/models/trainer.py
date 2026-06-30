@@ -3,18 +3,18 @@ trainer.py
 ----------
 NLI-RE training objective: combined Loss = L_WCE + L_NCE.
 
-Section 3 (§Relation Inference / Training) of the paper defines a combined
-loss to address the inherent class imbalance between positive (entailment /
-relation present) and negative (non-entailment / relation absent) instances:
+A combined loss to address the inherent class imbalance between positive 
+(entailment / relation present) and negative (non-entailment / relation absent) 
+instances:
 
     Loss = L_WCE + L_NCE
 
-L_WCE — Weighted Cross-Entropy loss (Eq. 3):
+L_WCE — Weighted Cross-Entropy loss:
     Penalises misclassification of positive instances (relation present)
     more heavily by assigning a higher weight w_p to the positive class
     relative to the negative weight w_n.
 
-L_NCE — Noise Contrastive Estimation loss (Eq. 4):
+L_NCE — Noise Contrastive Estimation loss:
     Improves discrimination between positive and negative instances by
     pulling the score of the true class above all competing classes via
     a temperature-scaled softmax (temperature τ).
@@ -30,8 +30,7 @@ from transformers import Trainer
 
 class ContrastiveTrainer(Trainer):
     """
-    Extends :class:`transformers.Trainer` with the NLI-RE combined loss
-    (Section 3, Training Objective):
+    Extends :class:`transformers.Trainer` with the NLI-RE combined loss:
 
         Loss = L_WCE + L_NCE
 
@@ -40,10 +39,10 @@ class ContrastiveTrainer(Trainer):
         - index 1 corresponds to the *True* label  (relation present)
 
     Args:
-        tau:      Temperature τ in the NCE softmax denominator (Eq. 4).
+        tau:      Temperature τ in the NCE softmax denominator.
                   Lower values sharpen the distribution; default 1.0.
         class_weights: Per-class weights [w_n, w_p] for the cross-entropy
-                  loss (Eq. 3).  w_p > w_n penalises false negatives on
+                  loss.  w_p > w_n penalises false negatives on
                   positive (entailment) instances more heavily.
         **kwargs: Forwarded to :class:`transformers.Trainer`.
     """
@@ -71,8 +70,6 @@ class ContrastiveTrainer(Trainer):
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, object]]:
         """
         Compute the combined NLI-RE training loss: Loss = L_WCE + L_NCE.
-
-        Relation Inference (Eq. 2)
         --------------------------
         The feature vector H from the Sentence Encoder is passed through a
         fully connected layer to produce per-class logits:
@@ -82,13 +79,13 @@ class ContrastiveTrainer(Trainer):
         The predicted label is True (relation present) when the positive-class
         logit dominates; False otherwise.
 
-        L_WCE — Weighted Cross-Entropy (Eq. 3)
+        L_WCE — Weighted Cross-Entropy
         ----------------------------------------
         Standard cross-entropy weighted by [w_n, w_p] so that
         misclassifying a positive instance (relation present) incurs a
         larger penalty, mitigating the natural class imbalance in RE corpora.
 
-        L_NCE — Noise Contrastive Estimation (Eq. 4)
+        L_NCE — Noise Contrastive Estimation
         ----------------------------------------------
         For each sample i, the NCE loss is the negative log-probability of
         the true class under a temperature-scaled softmax over all classes:
@@ -109,7 +106,7 @@ class ContrastiveTrainer(Trainer):
         logits = logits[non_zero_indices]
         labels = labels[non_zero_indices]
 
-        # ── L_NCE (Eq. 4) ────────────────────────────────────────────────
+        # ========== L_NCE ============================
         # s(y_i): logit at the ground-truth class for each sample i
         positive_scores = torch.gather(logits, 1, labels.view(-1, 1))
 
@@ -122,7 +119,7 @@ class ContrastiveTrainer(Trainer):
         )
         loss_nce = torch.mean(loss_nce)
 
-        # ── L_WCE (Eq. 3) ────────────────────────────────────────────────
+        # ========== L_WCE ============================
         # Class weights [w_n, w_p] penalise positive-instance errors more heavily
         loss_fct = nn.CrossEntropyLoss(
             weight=torch.tensor(self.class_weights, device=model.device)
