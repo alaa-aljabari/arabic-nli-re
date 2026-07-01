@@ -61,7 +61,7 @@ def main() -> None:
     sampled = sample_balanced(nli_pairs, n_positive, n_negative, seed=seed)
 
     train_ratio = data_cfg.get("train_ratio", 0.70)
-    val_ratio   = data_cfg.get("val_ratio",   0.15)
+    val_ratio   = data_cfg.get("val_ratio",   0.10)
     train, val, test = split_data(sampled, train_ratio, val_ratio, seed=seed)
     print(f"[prepare] Split → Train: {len(train)} | Val: {len(val)} | Test: {len(test)}")
 
